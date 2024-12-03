@@ -1,6 +1,5 @@
-import * as tf from '@tensorflow/tfjs-node';
-import { LOOKUP, PAD, START, UNKNOWN } from '../../../../public/dictionary'; // Adjust the path to your dictionary.js
-import path from 'path';
+import * as tf from '@tensorflow/tfjs'; // Import the browser version of TensorFlow.js
+import { LOOKUP, PAD, START, UNKNOWN } from '../../../../public/dictionary'; // Adjust path if needed
 
 // Preprocess function
 function preprocessText(text) {
@@ -26,12 +25,13 @@ let model = null;
 
 async function getModel() {
   if (!model) {
-      const modelUrl = process.env.NEXT_PUBLIC_MODEL_URL; // Access environment variable
-      model = await tf.loadLayersModel(modelUrl); // Use the URL from .env
+      const modelUrl = process.env.NEXT_PUBLIC_MODEL_URL; // Access the URL from .env
+      model = await tf.loadLayersModel(modelUrl); // Load model from URL
       console.log('Model loaded successfully!');
   }
   return model;
 }
+
 export async function POST(req) {
     try {
         // Ensure that the request method is POST
