@@ -38,7 +38,12 @@ export async function POST(req) {
         if (req.method !== 'POST') {
             return new Response(JSON.stringify({ error: 'Method not allowed' }), {
                 status: 405,
-                headers: { 'Content-Type': 'application/json' }
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*', // Allow all origins
+                    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE', // Allowed methods
+                    'Access-Control-Allow-Headers': 'Content-Type', // Allowed headers
+                }
             });
         }
 
@@ -46,7 +51,10 @@ export async function POST(req) {
         if (!text) {
             return new Response(JSON.stringify({ error: 'Text is required' }), {
                 status: 400,
-                headers: { 'Content-Type': 'application/json' }
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*' // Allow all origins
+                }
             });
         }
 
@@ -68,14 +76,20 @@ export async function POST(req) {
             }),
             {
                 status: 200,
-                headers: { 'Content-Type': 'application/json' }
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*' // Allow all origins
+                }
             }
         );
     } catch (error) {
         console.error('Error occurred:', error);
         return new Response(JSON.stringify({ error: 'Internal server error' }), {
             status: 500,
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' // Allow all origins
+            }
         });
     }
 }
