@@ -24,26 +24,36 @@ function preprocessText(text) {
 let model = null;
 
 async function getModel() {
-  if (!model) {
-      const modelUrl = process.env.NEXT_PUBLIC_MODEL_URL; // Access the URL from .env
-      model = await tf.loadLayersModel(modelUrl); // Load model from URL
-      console.log('Model loaded successfully!');
-  }
-  return model;
+    if (!model) {
+        const modelUrl = process.env.NEXT_PUBLIC_MODEL_URL; // Access the URL from .env
+        model = await tf.loadLayersModel(modelUrl); // Load model from URL
+        console.log('Model loaded successfully!');
+    }
+    return model;
 }
 
 export async function POST(req) {
+    if (req.method === 'OPTIONS') {
+        // Handle preflight request
+        return new Response(null, {
+            status: 204,
+            headers: {
+                'Access-Control-Allow-Origin': '*', // Allow all origins
+                'Access-Control-Allow-Methods': 'OPTIONS, GET, POST', // Allowed methods
+                'Access-Control-Allow-Headers': 'Content-Type', // Allowed headers
+            },
+        });
+    }
+
     try {
         // Ensure that the request method is POST
         if (req.method !== 'POST') {
             return new Response(JSON.stringify({ error: 'Method not allowed' }), {
                 status: 405,
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*', // Allow all origins
-                    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE', // Allowed methods
-                    'Access-Control-Allow-Headers': 'Content-Type', // Allowed headers
-                }
+                },
             });
         }
 
@@ -51,10 +61,10 @@ export async function POST(req) {
         if (!text) {
             return new Response(JSON.stringify({ error: 'Text is required' }), {
                 status: 400,
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*' // Allow all origins
-                }
+                    'Access-Control-Allow-Origin': '*', // Allow all origins
+                },
             });
         }
 
@@ -76,20 +86,20 @@ export async function POST(req) {
             }),
             {
                 status: 200,
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*' // Allow all origins
-                }
+                    'Access-Control-Allow-Origin': '*', // Allow all origins
+                },
             }
         );
     } catch (error) {
         console.error('Error occurred:', error);
         return new Response(JSON.stringify({ error: 'Internal server error' }), {
             status: 500,
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*' // Allow all origins
-            }
+                'Access-Control-Allow-Origin': '*', // Allow all origins
+            },
         });
     }
 }
